@@ -2,13 +2,13 @@ from flask import Flask, request
 
 app = Flask(__name__)
 
-@app.route('/login', methods=['GET'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.values:
+    if request.method == 'POST':
         return f"Given username is: {request.values['username']}"
     else:
         html_form = """
-            <form method="GET" action="/login">
+            <form method="POST" action="/login">
                 <input name="username" type="text" />
                 <input type="submit" value="Send" />
             </form>
