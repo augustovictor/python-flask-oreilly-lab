@@ -1,4 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, make_response, session
+import logging
+from logging.handlers import RotatingFileHandler
 
 app = Flask(__name__)
 
@@ -16,6 +18,7 @@ def signin():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+
         if valid_login(username, password):
             flash('Successfully logged in')
             response = make_response(redirect(url_for('welcome')))
@@ -23,6 +26,7 @@ def signin():
             return response
             
         else:
+            app.logger.warning(f'Incorrect credentials for user {username}')
             flash('Invalid credentials')
     return render_template('login.html')
 
@@ -37,4 +41,7 @@ def logout():
 
 if __name__ == '__main__':
     app.secret_key = '270fe462438a4bc4a72e1a9450b038f8'
+    handler = RotatingFileHandler('error.log', maxBytes=10000, backupCount=2)
+    handler.setLevel(logging.INFO)
+    app.logger.addHandler(handler)
     app.run(host='0.0.0.0', port=5000, debug=True)
