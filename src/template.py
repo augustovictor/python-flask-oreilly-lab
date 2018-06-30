@@ -1,11 +1,10 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, make_response
+from flask import Flask, render_template, request, redirect, url_for, flash, make_response, session
 
 app = Flask(__name__)
-app.secret_key = 'MY-SECRET'
 
 @app.route('/welcome')
 def welcome(name=None):
-    username = request.cookies.get('username')
+    username = session['username']
     if username:
         return render_template('hello.html', name=username)
     else:
@@ -20,7 +19,7 @@ def signin():
         if valid_login(username, password):
             flash('Successfully logged in')
             response = make_response(redirect(url_for('welcome')))
-            response.set_cookie('username', username)
+            session['username'] = username
             return response
             
         else:
@@ -33,8 +32,9 @@ def valid_login(username, password):
 @app.route('/logout')
 def logout():
     response = make_response(redirect(url_for('signin')))
-    response.set_cookie('username', '', expires=0)
+    session.pop('username', None)
     return response
 
 if __name__ == '__main__':
+    app.secret_key = '270fe462438a4bc4a72e1a9450b038f8'
     app.run(host='0.0.0.0', port=5000, debug=True)
