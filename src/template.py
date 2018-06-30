@@ -17,8 +17,8 @@ def signin():
             flash('Successfully logged in')
             return redirect(url_for('welcome', name=username))
         else:
-            error = 'Invalid credentials'
-    return render_template('login.html', error=error)
+            flash('Invalid credentials')
+    return render_template('login.html')
 
 def valid_login(username, password):
     return username == password
