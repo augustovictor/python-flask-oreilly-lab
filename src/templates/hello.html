@@ -7,6 +7,15 @@
     <title>Home</title>
 </head>
 <body>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul>
+            {% for msg in messages %}
+                <li>{{ msg }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    {% endwith %}
     <h1>Heeey you! {% if name %}{{ name }}{% endif %}</h1>
 </body>
 </html>
